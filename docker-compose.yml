@@ -1,0 +1,46 @@
+version: '3'
+
+volumes:
+  ligue-mysql-test-data:
+    driver: local
+  ligue-mysql-app-data:
+    driver: local
+
+services:
+  test_database:
+    image: mysql:5.7
+    restart: always
+    container_name: ligue-test-database
+    volumes:
+      - ligue-mysql-test-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=tests_ligue
+      - MYSQL_DATABASE=tests_ligue
+
+  app_database:
+    image: mysql:5.7
+    restart: always
+    container_name: ligue-app-database
+    volumes:
+      - ligue-mysql-app-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=app_ligue
+      - MYSQL_DATABASE=app_ligue
+
+  application:
+    image: node:12
+    restart: always
+    container_name: ligue-challenge-app
+    working_dir: /usr/src/app
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "3000:3000"
+    command: yarn dev
+    links:
+      - test_database
+      - app_database
