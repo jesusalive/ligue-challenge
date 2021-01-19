@@ -1,5 +1,6 @@
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { UpdateDeveloperRepository } from '@/Domain/developer/repositories/UpdateDeveloperRepository'
+import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 import { DbUpdateDeveloper } from './DbUpdateDeveloper'
 
 const makeFakeDeveloper = (): DeveloperModel => ({
@@ -47,6 +48,19 @@ describe('DbUpdateDeveloper', () => {
     expect(updateSpy).toHaveBeenCalledWith('any_id', {
       name: 'any_other_name'
     })
+  })
+
+  test('Should throw a NotFoundError if UpdateDeveloperRepository returns null', async () => {
+    const { sut, updateDeveloperRepositoryStub } = makeSut()
+
+    const updateSpy = jest.spyOn(updateDeveloperRepositoryStub, 'update')
+    updateSpy.mockResolvedValueOnce(null)
+
+    const promise = sut.update('any_id', {
+      name: 'any_other_name'
+    })
+
+    await expect(promise).rejects.toEqual(new NotFoundError('Developer not found'))
   })
 
   test('Should return a updated developer on success', async () => {
