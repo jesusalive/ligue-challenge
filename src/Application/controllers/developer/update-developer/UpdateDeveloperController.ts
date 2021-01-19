@@ -11,10 +11,12 @@ export class UpdateDeveloperController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const err = this.validation.validate(httpRequest.body)
-
       if (err) return badRequest(err)
 
-      await this.updateDeveloper.update(httpRequest.params.id, httpRequest.body)
+      await this.updateDeveloper.update(httpRequest.params.id, {
+        ...httpRequest.body,
+        birthdate: httpRequest.body.birthdate ? new Date(httpRequest.body.birthdate) : undefined
+      })
 
       return noContent()
     } catch (err) {
