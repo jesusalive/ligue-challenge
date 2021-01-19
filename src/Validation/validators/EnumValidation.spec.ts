@@ -5,8 +5,16 @@ interface SutTypes {
   sut: EnumValidation
 }
 
-const makeSut = (): SutTypes => {
-  const sut = new EnumValidation('enumField', ['enumOption1', 'enumOption2'])
+interface SutOptions {
+  nullable?: boolean
+}
+
+const makeSut = (options?: SutOptions): SutTypes => {
+  const sut = new EnumValidation(
+    'enumField',
+    ['enumOption1', 'enumOption2'],
+    options?.nullable ? { nullable: options.nullable } : undefined
+  )
 
   return {
     sut
@@ -18,6 +26,14 @@ describe('EnumValidation', () => {
     const { sut } = makeSut()
 
     const sutResult = sut.validate({ enumField: 'enumOption1' })
+
+    expect(sutResult).toBeNull()
+  })
+
+  test('Should return null if field is falsy and nullable is true', () => {
+    const { sut } = makeSut({ nullable: true })
+
+    const sutResult = sut.validate({ enumField: undefined })
 
     expect(sutResult).toBeNull()
   })
