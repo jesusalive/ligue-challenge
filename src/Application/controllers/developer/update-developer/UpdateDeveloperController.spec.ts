@@ -1,6 +1,6 @@
 import { UpdateDeveloperController } from './UpdateDeveloperController'
 import { HttpRequest, Validation } from '@/Application/protocols'
-import { badRequest, noContent, serverError, notFound } from '@/Application/helpers/http/http-helper'
+import { badRequest, ok, serverError, notFound } from '@/Application/helpers/http/http-helper'
 import { UpdateDeveloper } from '@/Domain/developer/usecases/UpdateDeveloper'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
@@ -108,11 +108,11 @@ describe('CreateDeveloperController', () => {
     expect(httpResponse).toEqual(notFound(new NotFoundError('any_message')))
   })
 
-  test('Should return noContent on success', async () => {
+  test('Should return ok on success', async () => {
     const { sut } = makeSut()
 
     const httpResponse = await sut.handle(makeFakeRequest())
 
-    expect(httpResponse).toEqual(noContent())
+    expect(httpResponse).toEqual(ok({}))
   })
 })

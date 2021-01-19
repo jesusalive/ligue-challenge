@@ -1,4 +1,4 @@
-import { badRequest, noContent, notFound, serverError } from '@/Application/helpers/http/http-helper'
+import { badRequest, notFound, ok, serverError } from '@/Application/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/Application/protocols'
 import { UpdateDeveloper } from '@/Domain/developer/usecases/UpdateDeveloper'
 import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
@@ -19,7 +19,7 @@ export class UpdateDeveloperController implements Controller {
         birthdate: httpRequest.body.birthdate ? new Date(httpRequest.body.birthdate) : undefined
       })
 
-      return noContent()
+      return ok({})
     } catch (err) {
       if (err instanceof NotFoundError) return notFound(err)
       return serverError(err)
