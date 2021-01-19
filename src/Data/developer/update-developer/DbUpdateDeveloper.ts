@@ -8,7 +8,7 @@ export class DbUpdateDeveloper implements UpdateDeveloper {
   ) {}
 
   async update (id: string|number, data: UpdateDeveloperData): Promise<DeveloperModel> {
-    await this.updateDeveloperRepository.update(id, data)
-    return null
+    const updatedDeveloper = await this.updateDeveloperRepository.update(id, data)
+    return updatedDeveloper
   }
 }
