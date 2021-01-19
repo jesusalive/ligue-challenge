@@ -8,11 +8,11 @@ import { ValidationComposite } from '@/Validation/validators/ValidationComposite
 
 export const makeCreateDeveloperValidation = (): ValidationComposite => {
   const validations: Validation[] = []
-  validations.push(new RequiredFieldValidation('name'))
-  validations.push(new RequiredFieldValidation('sex'))
-  validations.push(new RequiredFieldValidation('age'))
-  validations.push(new RequiredFieldValidation('hobby'))
-  validations.push(new RequiredFieldValidation('birthdate'))
+
+  for (const field of ['name', 'sex', 'age', 'hobby', 'birthdate']) {
+    validations.push(new RequiredFieldValidation(field))
+  }
+
   validations.push(new EnumValidation('sex', ['H', 'M']))
   validations.push(new DateStringValidation('birthdate', new DateStringValidatorAdapter()))
   validations.push(new NumberValidation('age'))
