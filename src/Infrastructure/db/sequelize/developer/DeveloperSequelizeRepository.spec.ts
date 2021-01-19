@@ -51,4 +51,58 @@ describe('DeveloperSequelizeRepository', () => {
       )
     })
   })
+
+  describe('update', () => {
+    test('Should call update with correct values', async () => {
+      const sut = makeSut()
+
+      const updateSpy = jest.spyOn(Developer, 'update')
+      await sut.update(1, {
+        name: 'any_other_name'
+      })
+
+      expect(updateSpy).toHaveBeenCalledWith(
+        {
+          name: 'any_other_name'
+        },
+        {
+          where: {
+            id: 1
+          }
+        }
+      )
+    })
+
+    test('Should return a updated developer on success', async () => {
+      const developer = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const sut = makeSut()
+
+      const updatedDeveloper = await sut.update(developer.id, {
+        name: 'any_other_name'
+      })
+
+      expect(updatedDeveloper).toEqual(
+        expect.objectContaining({
+          id: developer.id,
+          name: 'any_other_name'
+        })
+      )
+    })
+
+    test('Should return null if not found', async () => {
+      const sut = makeSut()
+
+      const updatedDeveloper = await sut.update(1, {
+        name: 'any_other_name'
+      })
+
+      expect(updatedDeveloper).toBeNull()
+    })
+  })
 })
