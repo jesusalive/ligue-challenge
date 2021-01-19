@@ -12,7 +12,10 @@ export class CreateDeveloperController implements Controller {
       const err = this.validation.validate(httpRequest.body)
       if (err) return badRequest(err)
 
-      await this.addDeveloper.add(httpRequest.body)
+      await this.addDeveloper.add({
+        ...httpRequest.body,
+        birthdate: new Date(httpRequest.body.birthdate)
+      })
 
       return created({})
     } catch (err) {
