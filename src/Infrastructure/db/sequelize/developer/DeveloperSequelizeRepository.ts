@@ -4,7 +4,7 @@ import Developer from './Developer.sequelize'
 
 export class DeveloperSequelizeRepository implements CreateDeveloperRepository {
   async create (data: Omit<DeveloperModel, 'id'>): Promise<DeveloperModel> {
-    await Developer.create(data)
-    return null
+    const developer = await Developer.create(data)
+    return developer
   }
 }
