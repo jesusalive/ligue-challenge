@@ -1,4 +1,4 @@
-import { serverError } from '@/Application/helpers/http/http-helper'
+import { serverError, badRequest } from '@/Application/helpers/http/http-helper'
 import { HttpRequest, Validation } from '@/Application/protocols'
 import { CreateDeveloperController } from './CreateDeveloperController'
 
@@ -59,5 +59,16 @@ describe('CreateDeveloperController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return badRequest if validation returns any error', async () => {
+    const { sut, validationStub } = makeSut()
+
+    const validateSpy = jest.spyOn(validationStub, 'validate')
+    validateSpy.mockReturnValueOnce(new Error())
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(badRequest(new Error()))
   })
 })
