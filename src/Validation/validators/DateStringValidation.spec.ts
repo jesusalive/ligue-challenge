@@ -15,9 +15,17 @@ interface SutTypes {
   dateValidator: DateValidator
 }
 
-const makeSut = (): SutTypes => {
+interface SutOptions {
+  nullable?: boolean
+}
+
+const makeSut = (options?: SutOptions): SutTypes => {
   const dateValidator = makeFakeDateValidator()
-  const sut = new DateStringValidation('fieldname', dateValidator)
+  const sut = new DateStringValidation(
+    'fieldname',
+    dateValidator,
+    options?.nullable ? { nullable: options.nullable } : undefined
+  )
 
   return {
     sut,
@@ -33,6 +41,14 @@ describe('DateStringValidation', () => {
     sut.validate({ fieldname: 'valid_date' })
 
     expect(isValidSpy).toHaveBeenCalledWith('valid_date')
+  })
+
+  test('Should return null if field is falsy and nullable is true', () => {
+    const { sut } = makeSut({ nullable: true })
+
+    const sutResult = sut.validate({ fieldname: undefined })
+
+    expect(sutResult).toBeNull()
   })
 
   test('Should return InvalidParamError if fails with correct fieldname', () => {
