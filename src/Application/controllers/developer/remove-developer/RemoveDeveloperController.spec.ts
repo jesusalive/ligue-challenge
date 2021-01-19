@@ -1,3 +1,4 @@
+import { serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { RemoveDeveloper } from '@/Domain/developer/usecases/RemoveDeveloper'
@@ -43,5 +44,16 @@ describe('RemoveDeveloperController', () => {
     await sut.handle(fakeRequest)
 
     expect(removeSpy).toHaveBeenCalledWith(fakeRequest.params.id)
+  })
+
+  test('Should return serverError if RemoveDeveloper throws a unexpected error', async () => {
+    const { sut, removeDeveloperStub } = makeSut()
+
+    const removeSpy = jest.spyOn(removeDeveloperStub, 'remove')
+    removeSpy.mockRejectedValueOnce(new Error())
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
