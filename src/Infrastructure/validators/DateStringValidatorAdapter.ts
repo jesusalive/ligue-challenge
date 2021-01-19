@@ -1,5 +1,4 @@
 import { DateValidator } from '@/Validation/protocols/DateValidator'
-
 import validator from 'validator'
 
 export class DateStringValidatorAdapter implements DateValidator {
