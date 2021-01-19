@@ -52,4 +52,12 @@ describe('DbAddDeveloper', () => {
 
     expect(createSpy).toHaveBeenCalledWith(makeFakeParams())
   })
+
+  test('Should return an Developer on success', async () => {
+    const { sut } = makeSut()
+
+    const createdDeveloper = await sut.add(makeFakeParams())
+
+    expect(createdDeveloper).toEqual(makeFakeDeveloper())
+  })
 })
