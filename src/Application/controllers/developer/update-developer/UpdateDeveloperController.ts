@@ -1,4 +1,4 @@
-import { badRequest } from '@/Application/helpers/http/http-helper'
+import { badRequest, noContent } from '@/Application/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/Application/protocols'
 import { UpdateDeveloper } from '@/Domain/developer/usecases/UpdateDeveloper'
 
@@ -15,6 +15,6 @@ export class UpdateDeveloperController implements Controller {
 
     await this.updateDeveloper.update(httpRequest.params.id, httpRequest.body)
 
-    return null
+    return noContent()
   }
 }
