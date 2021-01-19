@@ -1,6 +1,6 @@
 import { UpdateDeveloperController } from './UpdateDeveloperController'
 import { HttpRequest, Validation } from '@/Application/protocols'
-import { badRequest } from '@/Application/helpers/http/http-helper'
+import { badRequest, noContent } from '@/Application/helpers/http/http-helper'
 import { UpdateDeveloper } from '@/Domain/developer/usecases/UpdateDeveloper'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 
@@ -83,5 +83,13 @@ describe('CreateDeveloperController', () => {
     await sut.handle(fakeRequest)
 
     expect(updateSpy).toHaveBeenCalledWith(1, fakeRequest.body)
+  })
+
+  test('Should return noContent on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(noContent())
   })
 })
