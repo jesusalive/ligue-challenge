@@ -36,5 +36,19 @@ describe('DeveloperSequelizeRepository', () => {
 
       expect(createSpy).toHaveBeenCalledWith(makeCreateParams())
     })
+
+    test('Should return a created developer on success', async () => {
+      const sut = makeSut()
+
+      const fakeParams = makeCreateParams()
+      const developer = await sut.create(fakeParams)
+
+      expect(developer).toEqual(
+        expect.objectContaining({
+          name: fakeParams.name,
+          sex: fakeParams.sex
+        })
+      )
+    })
   })
 })
