@@ -1,3 +1,4 @@
+import { serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest, Validation } from '@/Application/protocols'
 import { CreateDeveloperController } from './CreateDeveloperController'
 
@@ -45,5 +46,18 @@ describe('CreateDeveloperController', () => {
     await sut.handle(fakeRequest)
 
     expect(validateSpy).toHaveBeenCalledWith(fakeRequest.body)
+  })
+
+  test('Should return serverError if validation throws a unexpected error', async () => {
+    const { sut, validationStub } = makeSut()
+
+    const validateSpy = jest.spyOn(validationStub, 'validate')
+    validateSpy.mockImplementationOnce(() => {
+      throw new Error()
+    })
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
