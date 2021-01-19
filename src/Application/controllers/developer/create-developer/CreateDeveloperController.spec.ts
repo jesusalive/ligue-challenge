@@ -1,5 +1,7 @@
-import { serverError, badRequest } from '@/Application/helpers/http/http-helper'
+import { serverError, badRequest, created } from '@/Application/helpers/http/http-helper'
 import { HttpRequest, Validation } from '@/Application/protocols'
+import { DeveloperModel } from '@/Domain/developer/Developer'
+import { AddDeveloper } from '@/Domain/developer/usecases/AddDeveloper'
 import { CreateDeveloperController } from './CreateDeveloperController'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -21,6 +23,24 @@ const makeValidationStub = (): Validation => {
   return new ValidationStub()
 }
 
+const makeFakeDeveloper = (): DeveloperModel => ({
+  id: 'any_id',
+  age: 10,
+  sex: 'H',
+  hobby: 'games',
+  name: 'any_name',
+  birthdate: new Date('01-01-2020')
+})
+
+const makeAddDeveloperStub = (): AddDeveloper => {
+  class AddDeveloperStub implements AddDeveloper {
+    async add (): Promise<DeveloperModel> {
+      return await new Promise(resolve => resolve(makeFakeDeveloper()))
+    }
+  }
+  return new AddDeveloperStub()
+}
+
 interface SutTypes {
   sut: CreateDeveloperController
   validationStub: Validation
@@ -28,7 +48,8 @@ interface SutTypes {
 
 const makeSut = (): SutTypes => {
   const validationStub = makeValidationStub()
-  const sut = new CreateDeveloperController(validationStub)
+  const addDeveloperStub = makeAddDeveloperStub()
+  const sut = new CreateDeveloperController(validationStub, addDeveloperStub)
 
   return {
     sut,
@@ -70,5 +91,13 @@ describe('CreateDeveloperController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
+  test('Should return created on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(created({}))
   })
 })
