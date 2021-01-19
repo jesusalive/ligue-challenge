@@ -1,6 +1,6 @@
 import { UpdateDeveloperController } from './UpdateDeveloperController'
 import { HttpRequest, Validation } from '@/Application/protocols'
-import { badRequest, noContent } from '@/Application/helpers/http/http-helper'
+import { badRequest, noContent, serverError } from '@/Application/helpers/http/http-helper'
 import { UpdateDeveloper } from '@/Domain/developer/usecases/UpdateDeveloper'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 
@@ -83,6 +83,17 @@ describe('CreateDeveloperController', () => {
     await sut.handle(fakeRequest)
 
     expect(updateSpy).toHaveBeenCalledWith(1, fakeRequest.body)
+  })
+
+  test('Should return serverError if UpdateDeveloper throws a unexpected error', async () => {
+    const { sut, updateDeveloperStub } = makeSut()
+
+    const updateSpy = jest.spyOn(updateDeveloperStub, 'update')
+    updateSpy.mockRejectedValueOnce(new Error())
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 
   test('Should return noContent on success', async () => {
