@@ -1,6 +1,8 @@
 import { UpdateDeveloperController } from './UpdateDeveloperController'
 import { HttpRequest, Validation } from '@/Application/protocols'
 import { badRequest } from '@/Application/helpers/http/http-helper'
+import { UpdateDeveloper } from '@/Domain/developer/usecases/UpdateDeveloper'
+import { DeveloperModel } from '@/Domain/developer/Developer'
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -9,7 +11,19 @@ const makeFakeRequest = (): HttpRequest => ({
     sex: 'H',
     hobby: 'games',
     birthdate: new Date('01-01-2020')
+  },
+  params: {
+    id: 1
   }
+})
+
+const makeFakeDeveloper = (): DeveloperModel => ({
+  id: 'any_id',
+  age: 10,
+  sex: 'H',
+  hobby: 'games',
+  name: 'any_name',
+  birthdate: new Date('01-01-2020')
 })
 
 const makeValidationStub = (): Validation => {
@@ -21,18 +35,30 @@ const makeValidationStub = (): Validation => {
   return new ValidationStub()
 }
 
+const makeUpdateDeveloperStub = (): UpdateDeveloper => {
+  class UpdateDeveloperStub implements UpdateDeveloper {
+    async update (): Promise<DeveloperModel> {
+      return await new Promise(resolve => resolve(makeFakeDeveloper()))
+    }
+  }
+  return new UpdateDeveloperStub()
+}
+
 interface SutTypes {
   sut: UpdateDeveloperController
   validationStub: Validation
+  updateDeveloperStub: UpdateDeveloper
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = makeValidationStub()
-  const sut = new UpdateDeveloperController(validationStub)
+  const updateDeveloperStub = makeUpdateDeveloperStub()
+  const sut = new UpdateDeveloperController(validationStub, updateDeveloperStub)
 
   return {
     sut,
-    validationStub
+    validationStub,
+    updateDeveloperStub
   }
 }
 
@@ -46,5 +72,16 @@ describe('CreateDeveloperController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(badRequest(new Error()))
+  })
+
+  test('Should call UpdateDeveloper with correct values', async () => {
+    const { sut, updateDeveloperStub } = makeSut()
+
+    const updateSpy = jest.spyOn(updateDeveloperStub, 'update')
+
+    const fakeRequest = makeFakeRequest()
+    await sut.handle(fakeRequest)
+
+    expect(updateSpy).toHaveBeenCalledWith(1, fakeRequest.body)
   })
 })
