@@ -1,4 +1,4 @@
-import { notFound, serverError } from '@/Application/helpers/http/http-helper'
+import { noContent, notFound, serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { RemoveDeveloper } from '@/Domain/developer/usecases/RemoveDeveloper'
@@ -67,5 +67,13 @@ describe('RemoveDeveloperController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(notFound(new NotFoundError('any_message')))
+  })
+
+  test('Should return noContent on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(noContent())
   })
 })
