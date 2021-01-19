@@ -1,6 +1,7 @@
-import { badRequest, noContent, serverError } from '@/Application/helpers/http/http-helper'
+import { badRequest, noContent, notFound, serverError } from '@/Application/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/Application/protocols'
 import { UpdateDeveloper } from '@/Domain/developer/usecases/UpdateDeveloper'
+import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 
 export class UpdateDeveloperController implements Controller {
   constructor (
@@ -20,6 +21,7 @@ export class UpdateDeveloperController implements Controller {
 
       return noContent()
     } catch (err) {
+      if (err instanceof NotFoundError) return notFound(err)
       return serverError(err)
     }
   }
