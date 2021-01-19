@@ -7,7 +7,7 @@ const makeFakeDeveloper = (): DeveloperModel => ({
   age: 10,
   sex: 'H',
   hobby: 'games',
-  name: 'any_name',
+  name: 'any_other_name',
   birthdate: new Date('01-01-2020')
 })
 
@@ -47,5 +47,19 @@ describe('DbUpdateDeveloper', () => {
     expect(updateSpy).toHaveBeenCalledWith('any_id', {
       name: 'any_other_name'
     })
+  })
+
+  test('Should return a updated developer on success', async () => {
+    const { sut } = makeSut()
+
+    const updatedDeveloper = await sut.update('any_id', {
+      name: 'any_other_name'
+    })
+
+    expect(updatedDeveloper).toEqual(
+      expect.objectContaining({
+        name: 'any_other_name'
+      })
+    )
   })
 })
