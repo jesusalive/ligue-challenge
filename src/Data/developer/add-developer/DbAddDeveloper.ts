@@ -8,7 +8,7 @@ export class DbAddDeveloper implements AddDeveloper {
   ) {}
 
   async add (data: Omit<DeveloperModel, 'id'>): Promise<DeveloperModel> {
-    await this.createDeveloperRepository.create(data)
-    return null
+    const createdDeveloper = await this.createDeveloperRepository.create(data)
+    return createdDeveloper
   }
 }
