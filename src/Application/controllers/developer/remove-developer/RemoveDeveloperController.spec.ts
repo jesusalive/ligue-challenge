@@ -1,7 +1,8 @@
-import { serverError } from '@/Application/helpers/http/http-helper'
+import { notFound, serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { RemoveDeveloper } from '@/Domain/developer/usecases/RemoveDeveloper'
+import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 import { RemoveDeveloperController } from './RemoveDeveloperController'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -55,5 +56,16 @@ describe('RemoveDeveloperController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return notFound if RemoveDeveloper throws a NotFoundError', async () => {
+    const { sut, removeDeveloperStub } = makeSut()
+
+    const removeSpy = jest.spyOn(removeDeveloperStub, 'remove')
+    removeSpy.mockRejectedValueOnce(new NotFoundError('any_message'))
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(notFound(new NotFoundError('any_message')))
   })
 })
