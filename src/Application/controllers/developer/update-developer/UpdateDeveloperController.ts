@@ -14,12 +14,12 @@ export class UpdateDeveloperController implements Controller {
       const err = this.validation.validate(httpRequest.body)
       if (err) return badRequest(err)
 
-      await this.updateDeveloper.update(httpRequest.params.id, {
+      const updatedDeveloper = await this.updateDeveloper.update(httpRequest.params.id, {
         ...httpRequest.body,
         birthdate: httpRequest.body.birthdate ? new Date(httpRequest.body.birthdate) : undefined
       })
 
-      return ok({})
+      return ok(updatedDeveloper)
     } catch (err) {
       if (err instanceof NotFoundError) return notFound(err)
       return serverError(err)
