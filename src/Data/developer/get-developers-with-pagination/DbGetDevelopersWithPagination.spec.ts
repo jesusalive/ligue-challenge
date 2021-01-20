@@ -59,4 +59,17 @@ describe('DbGetDevelopersWithPagination', () => {
 
     expect(getAndCountAllSpy).toHaveBeenCalledWith({ name: 'any_name' }, 5, 5)
   })
+
+  test('Should return correct data on success', async () => {
+    const { sut } = makeSut()
+
+    const repositoryReturn = makeGetAndCounAllReturn()
+    const sutResult = await sut.get({ name: 'any_name' }, 2)
+
+    expect(sutResult).toEqual({
+      developers: repositoryReturn.developers,
+      page: 2,
+      totalOfPages: Math.ceil(repositoryReturn.total / 5)
+    })
+  })
 })
