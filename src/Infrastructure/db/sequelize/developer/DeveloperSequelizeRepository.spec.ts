@@ -287,5 +287,36 @@ describe('DeveloperSequelizeRepository', () => {
         total: 2
       })
     })
+
+    test('Should return only the first developer and total 1', async () => {
+      const fisrtDeveloper = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'specific_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const sut = makeSut()
+
+      const searchResult = await sut.getAndCountAll({ hobby: 'specific_hobby' })
+
+      expect(searchResult.developers.length).toBe(1)
+      expect(searchResult.total).toBe(1)
+      expect(searchResult).toEqual({
+        developers: expect.arrayContaining([
+          expect.objectContaining({
+            id: fisrtDeveloper.id
+          })
+        ]),
+        total: 1
+      })
+    })
   })
 })
