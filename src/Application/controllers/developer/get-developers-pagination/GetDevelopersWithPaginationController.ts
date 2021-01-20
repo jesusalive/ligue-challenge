@@ -3,9 +3,9 @@ import { Controller, HttpRequest, HttpResponse } from '@/Application/protocols'
 import { GetDevelopersWithPagination } from '@/Domain/developer/usecases/GetDevelopersWithPagination'
 import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 
-export class GetAllDevelopersWithPaginationController implements Controller {
+export class GetDevelopersWithPaginationController implements Controller {
   constructor (
-    private readonly getAllDevelopers: GetDevelopersWithPagination
+    private readonly getAllWithPagination: GetDevelopersWithPagination
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -14,7 +14,7 @@ export class GetAllDevelopersWithPaginationController implements Controller {
         ...httpRequest.query
       }
 
-      const searchResult = await this.getAllDevelopers.get(where, httpRequest.params.page)
+      const searchResult = await this.getAllWithPagination.get(where, httpRequest.params.page)
       if (searchResult.developers.length < 1) return notFound(new NotFoundError('No developer found'))
 
       return ok(searchResult)

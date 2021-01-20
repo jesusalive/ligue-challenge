@@ -3,7 +3,7 @@ import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetDevelopersWithPagination, GetDevelopersWithPaginationReturn } from '@/Domain/developer/usecases/GetDevelopersWithPagination'
 import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
-import { GetAllDevelopersWithPaginationController } from './GetAllDevelopersWithPaginationController'
+import { GetDevelopersWithPaginationController } from './GetDevelopersWithPaginationController'
 
 const makeFakeRequest = (): HttpRequest => ({
   query: {
@@ -49,13 +49,13 @@ const makeGetDevelopersWithPaginationStub = (): GetDevelopersWithPagination => {
 }
 
 interface SutTypes {
-  sut: GetAllDevelopersWithPaginationController
+  sut: GetDevelopersWithPaginationController
   getDevelopersWithPaginationStub: GetDevelopersWithPagination
 }
 
 const makeSut = (): SutTypes => {
   const getDevelopersWithPaginationStub = makeGetDevelopersWithPaginationStub()
-  const sut = new GetAllDevelopersWithPaginationController(getDevelopersWithPaginationStub)
+  const sut = new GetDevelopersWithPaginationController(getDevelopersWithPaginationStub)
 
   return {
     sut,
