@@ -1,3 +1,3 @@
 export interface DeleteDeveloperByIdRepository {
-  deleteById: (id: string|number) => Promise<void>
+  deleteById: (id: string|number) => Promise<number>
 }
