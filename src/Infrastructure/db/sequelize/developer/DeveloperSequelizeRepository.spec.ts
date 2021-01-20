@@ -168,5 +168,36 @@ describe('DeveloperSequelizeRepository', () => {
 
       expect(findAllSpy).toHaveBeenCalledTimes(1)
     })
+
+    test('Should return all developers on success', async () => {
+      const fisrtDeveloper = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const secondDeveloper = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const sut = makeSut()
+
+      const developers = await sut.getAll()
+
+      expect(developers).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: fisrtDeveloper.id
+          }),
+          expect.objectContaining({
+            id: secondDeveloper.id
+          })
+        ])
+      )
+    })
   })
 })
