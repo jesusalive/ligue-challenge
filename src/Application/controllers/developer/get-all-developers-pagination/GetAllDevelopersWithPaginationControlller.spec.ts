@@ -1,3 +1,4 @@
+import { serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetDevelopersWithPagination, GetDevelopersWithPaginationReturn } from '@/Domain/developer/usecases/GetDevelopersWithPagination'
@@ -76,5 +77,16 @@ describe('GetAllDevelopersController', () => {
       },
       fakeRequest.params.page
     )
+  })
+
+  test('Should return a serverError if GetDevelopersWithPagination throws a unexpected error', async () => {
+    const { sut, getDevelopersWithPaginationStub } = makeSut()
+
+    const getSpy = jest.spyOn(getDevelopersWithPaginationStub, 'get')
+    getSpy.mockRejectedValueOnce(new Error())
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
