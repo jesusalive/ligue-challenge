@@ -1,5 +1,3 @@
-import { DeveloperModel } from '../Developer'
-
 export interface RemoveDeveloper {
-  remove: (id: string|number) => Promise<DeveloperModel>
+  remove: (id: string|number) => Promise<void>
 }
