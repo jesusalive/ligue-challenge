@@ -5,8 +5,10 @@ import { GetAllDevelopersWithPaginationController } from './GetAllDevelopersWith
 
 const makeFakeRequest = (): HttpRequest => ({
   query: {
-    page: 1,
     name: 'any_name'
+  },
+  params: {
+    page: 1
   }
 })
 
@@ -72,7 +74,7 @@ describe('GetAllDevelopersController', () => {
       {
         name: fakeRequest.query.name
       },
-      fakeRequest.query.page
+      fakeRequest.params.page
     )
   })
 })
