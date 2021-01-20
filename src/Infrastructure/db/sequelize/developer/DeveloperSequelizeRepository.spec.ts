@@ -208,4 +208,21 @@ describe('DeveloperSequelizeRepository', () => {
       expect(developers).toEqual([])
     })
   })
+
+  describe('getAndCountAll', () => {
+    test('Should call findAndCountAll with correct values', async () => {
+      const sut = makeSut()
+
+      const findAndCountAllSpy = jest.spyOn(Developer, 'findAndCountAll')
+      await sut.getAndCountAll({ name: 'any_name' }, 1, 2)
+
+      expect(findAndCountAllSpy).toHaveBeenCalledWith({
+        where: {
+          name: 'any_name'
+        },
+        limit: 1,
+        offset: 2
+      })
+    })
+  })
 })
