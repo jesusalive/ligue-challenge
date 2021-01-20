@@ -103,7 +103,7 @@ describe('GetAllDevelopersController', () => {
 
     const httpResponse = await sut.handle(makeFakeRequest())
 
-    expect(httpResponse).toEqual(notFound(new NotFoundError('No developer found')))
+    expect(httpResponse).toEqual(notFound(new NotFoundError('No developers found')))
   })
 
   test('Should return ok with data on success', async () => {

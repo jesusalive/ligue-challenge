@@ -15,7 +15,7 @@ export class GetDevelopersWithPaginationController implements Controller {
       }
 
       const searchResult = await this.getAllWithPagination.get(where, httpRequest.params.page)
-      if (searchResult.developers.length < 1) return notFound(new NotFoundError('No developer found'))
+      if (searchResult.developers.length < 1) return notFound(new NotFoundError('No developers found'))
 
       return ok(searchResult)
     } catch (err) {
