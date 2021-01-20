@@ -1,6 +1,7 @@
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { CreateDeveloperRepository } from '@/Domain/developer/repositories/CreateDeveloperRepository'
 import { DeleteDeveloperByIdRepository } from '@/Domain/developer/repositories/DeleteDeveloperByIdRepository'
+import { GetAllDevelopersRepository } from '@/Domain/developer/repositories/GetAllDevelopersRepository'
 import { UpdateDeveloperRepository } from '@/Domain/developer/repositories/UpdateDeveloperRepository'
 import { UpdateDeveloperData } from '@/Domain/developer/usecases/UpdateDeveloper'
 import Developer from './Developer.sequelize'
@@ -8,7 +9,8 @@ import Developer from './Developer.sequelize'
 export class DeveloperSequelizeRepository implements
   CreateDeveloperRepository,
   UpdateDeveloperRepository,
-  DeleteDeveloperByIdRepository {
+  DeleteDeveloperByIdRepository,
+  GetAllDevelopersRepository {
   async create (data: Omit<DeveloperModel, 'id'>): Promise<DeveloperModel> {
     const developer = await Developer.create(data)
     return developer
@@ -37,5 +39,10 @@ export class DeveloperSequelizeRepository implements
     })
 
     return quantityOfRemovedRecords
+  }
+
+  async getAll (): Promise<DeveloperModel[]> {
+    const developers = await Developer.findAll()
+    return developers
   }
 }
