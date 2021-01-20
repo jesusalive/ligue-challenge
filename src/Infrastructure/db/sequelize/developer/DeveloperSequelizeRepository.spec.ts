@@ -105,4 +105,27 @@ describe('DeveloperSequelizeRepository', () => {
       expect(updatedDeveloper).toBeNull()
     })
   })
+
+  describe('deleteById', () => {
+    test('Should call destroy with correct values', async () => {
+      const developer = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const sut = makeSut()
+
+      const destroySpy = jest.spyOn(Developer, 'destroy')
+
+      await sut.deleteById(developer.id)
+
+      expect(destroySpy).toHaveBeenCalledWith({
+        where: {
+          id: developer.id
+        }
+      })
+    })
+  })
 })
