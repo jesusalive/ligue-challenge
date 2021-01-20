@@ -1,5 +1,6 @@
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetAllDevelopersRepository } from '@/Domain/developer/repositories/GetAllDevelopersRepository'
+import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 import { DbGetAllDevelopers } from './DbGetAllDevelopers'
 
 const makeFakeDevelopersArray = (): DeveloperModel[] => ([
@@ -53,5 +54,16 @@ describe('DbAddDeveloper', () => {
     await sut.getAll()
 
     expect(getAllSpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Should throw if GetAllDevelopersRepository throws', async () => {
+    const { sut, getAllDevelopersRepositoryStub } = makeSut()
+
+    const getAllSpy = jest.spyOn(getAllDevelopersRepositoryStub, 'getAll')
+    getAllSpy.mockRejectedValueOnce(new NotFoundError('any_message'))
+
+    const promise = sut.getAll()
+
+    await expect(promise).rejects.toEqual(new NotFoundError('any_message'))
   })
 })
