@@ -17,7 +17,7 @@ export class DbGetDevelopersWithPagination implements GetDevelopersWithPaginatio
     return {
       developers: repositoryResult.developers,
       page,
-      totalOfPages: Math.ceil(repositoryResult.total / 5)
+      totalOfPages: Math.ceil(repositoryResult.total / limit)
     }
   }
 }
