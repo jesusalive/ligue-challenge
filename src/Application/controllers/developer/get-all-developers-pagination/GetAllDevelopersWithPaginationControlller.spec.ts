@@ -1,7 +1,8 @@
-import { serverError } from '@/Application/helpers/http/http-helper'
+import { notFound, serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetDevelopersWithPagination, GetDevelopersWithPaginationReturn } from '@/Domain/developer/usecases/GetDevelopersWithPagination'
+import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 import { GetAllDevelopersWithPaginationController } from './GetAllDevelopersWithPaginationController'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -88,5 +89,20 @@ describe('GetAllDevelopersController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return notFound if GetDevelopersWithPagination returns empty developers array', async () => {
+    const { sut, getDevelopersWithPaginationStub } = makeSut()
+
+    const getSpy = jest.spyOn(getDevelopersWithPaginationStub, 'get')
+    getSpy.mockResolvedValueOnce({
+      developers: [],
+      page: 1,
+      totalOfPages: 1
+    })
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(notFound(new NotFoundError('No developer found')))
   })
 })
