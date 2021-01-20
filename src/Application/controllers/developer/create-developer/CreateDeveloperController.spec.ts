@@ -98,6 +98,6 @@ describe('CreateDeveloperController', () => {
 
     const httpResponse = await sut.handle(makeFakeRequest())
 
-    expect(httpResponse).toEqual(created({}))
+    expect(httpResponse).toEqual(created(makeFakeDeveloper()))
   })
 })
