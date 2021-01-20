@@ -148,5 +148,13 @@ describe('DeveloperSequelizeRepository', () => {
       expect(quantityOfRemovedRecords).toBe(1)
       expect(removedDeveloper).toBeFalsy()
     })
+
+    test('Should return 0 if developer not found', async () => {
+      const sut = makeSut()
+
+      const quantityOfRemovedRecords = await sut.deleteById(1)
+
+      expect(quantityOfRemovedRecords).toBe(0)
+    })
   })
 })
