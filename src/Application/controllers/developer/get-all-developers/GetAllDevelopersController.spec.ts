@@ -1,3 +1,4 @@
+import { serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetAllDevelopers } from '@/Domain/developer/usecases/GetAllDevelopers'
@@ -58,5 +59,16 @@ describe('GetAllDevelopersController', () => {
     await sut.handle(fakeRequest)
 
     expect(getAllSpy).toHaveBeenCalledTimes(1)
+  })
+
+  test('Should return serverError if GetAllDevelopers throws a unexpected error', async () => {
+    const { sut, getAllDevelopersStub } = makeSut()
+
+    const getAllSpy = jest.spyOn(getAllDevelopersStub, 'getAll')
+    getAllSpy.mockRejectedValueOnce(new Error())
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
