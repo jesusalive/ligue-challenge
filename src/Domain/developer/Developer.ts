@@ -6,3 +6,5 @@ export interface DeveloperModel {
   hobby: string
   birthdate: Date
 }
+
+export interface DeveloperModelWhereParam extends Partial<DeveloperModel> {}
