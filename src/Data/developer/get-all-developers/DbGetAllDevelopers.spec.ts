@@ -66,4 +66,12 @@ describe('DbAddDeveloper', () => {
 
     await expect(promise).rejects.toEqual(new NotFoundError('any_message'))
   })
+
+  test('Should return an developers array on success', async () => {
+    const { sut } = makeSut()
+
+    const developers = await sut.getAll()
+
+    expect(developers).toEqual(makeFakeDevelopersArray())
+  })
 })
