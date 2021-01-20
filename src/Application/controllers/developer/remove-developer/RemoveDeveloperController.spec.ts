@@ -1,6 +1,5 @@
 import { noContent, notFound, serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
-import { DeveloperModel } from '@/Domain/developer/Developer'
 import { RemoveDeveloper } from '@/Domain/developer/usecases/RemoveDeveloper'
 import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 import { RemoveDeveloperController } from './RemoveDeveloperController'
@@ -13,7 +12,7 @@ const makeFakeRequest = (): HttpRequest => ({
 
 const makeRemoveDeveloperStub = (): RemoveDeveloper => {
   class RemoveDeveloperStub implements RemoveDeveloper {
-    async remove (): Promise<DeveloperModel> {
+    async remove (): Promise<void> {
       return await new Promise(resolve => resolve(null))
     }
   }
