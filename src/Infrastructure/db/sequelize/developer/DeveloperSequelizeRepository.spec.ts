@@ -199,5 +199,13 @@ describe('DeveloperSequelizeRepository', () => {
         ])
       )
     })
+
+    test('Should return a empty array if nothing found', async () => {
+      const sut = makeSut()
+
+      const developers = await sut.getAll()
+
+      expect(developers).toEqual([])
+    })
   })
 })
