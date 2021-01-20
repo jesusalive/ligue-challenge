@@ -10,13 +10,11 @@ export class GetAllDevelopersWithPaginationController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const page = httpRequest.query.page || 1
       const where = {
-        ...httpRequest.query,
-        page: undefined
+        ...httpRequest.query
       }
 
-      const searchResult = await this.getAllDevelopers.get(where, page)
+      const searchResult = await this.getAllDevelopers.get(where, httpRequest.params.page)
       if (searchResult.developers.length < 1) return notFound(new NotFoundError('No developer found'))
 
       return ok(searchResult)
