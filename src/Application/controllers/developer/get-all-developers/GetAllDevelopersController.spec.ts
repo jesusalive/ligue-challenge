@@ -1,4 +1,4 @@
-import { serverError } from '@/Application/helpers/http/http-helper'
+import { ok, serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetAllDevelopers } from '@/Domain/developer/usecases/GetAllDevelopers'
@@ -70,5 +70,13 @@ describe('GetAllDevelopersController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return ok with developers data on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(ok(makeFakeDevelopersArray()))
   })
 })
