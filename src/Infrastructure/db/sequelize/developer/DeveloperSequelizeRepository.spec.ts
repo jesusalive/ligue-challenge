@@ -127,5 +127,26 @@ describe('DeveloperSequelizeRepository', () => {
         }
       })
     })
+
+    test('Should return 1 and remove record on success', async () => {
+      const developer = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const sut = makeSut()
+
+      const quantityOfRemovedRecords = await sut.deleteById(developer.id)
+      const removedDeveloper = await Developer.findOne({
+        where: {
+          id: developer.id
+        }
+      })
+
+      expect(quantityOfRemovedRecords).toBe(1)
+      expect(removedDeveloper).toBeFalsy()
+    })
   })
 })
