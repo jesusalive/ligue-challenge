@@ -224,5 +224,68 @@ describe('DeveloperSequelizeRepository', () => {
         offset: 2
       })
     })
+
+    test('Should return two developers and total 2', async () => {
+      const fisrtDeveloper = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const secondDeveloper = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const sut = makeSut()
+
+      const searchResult = await sut.getAndCountAll({ name: 'any_name' })
+
+      expect(searchResult).toEqual({
+        developers: expect.arrayContaining([
+          expect.objectContaining({
+            id: fisrtDeveloper.id
+          }),
+          expect.objectContaining({
+            id: secondDeveloper.id
+          })
+        ]),
+        total: 2
+      })
+    })
+
+    test('Should return only the second developer and total 2', async () => {
+      await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const secondDeveloper = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const sut = makeSut()
+
+      const searchResult = await sut.getAndCountAll({ name: 'any_name' }, 1, 1)
+
+      expect(searchResult.developers.length).toBe(1)
+      expect(searchResult.total).toBe(2)
+      expect(searchResult).toEqual({
+        developers: expect.arrayContaining([
+          expect.objectContaining({
+            id: secondDeveloper.id
+          })
+        ]),
+        total: 2
+      })
+    })
   })
 })
