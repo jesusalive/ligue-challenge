@@ -157,4 +157,16 @@ describe('DeveloperSequelizeRepository', () => {
       expect(quantityOfRemovedRecords).toBe(0)
     })
   })
+
+  describe('getAll', () => {
+    test('Should call findAll once time', async () => {
+      const sut = makeSut()
+
+      const findAllSpy = jest.spyOn(Developer, 'findAll')
+
+      await sut.getAll()
+
+      expect(findAllSpy).toHaveBeenCalledTimes(1)
+    })
+  })
 })
