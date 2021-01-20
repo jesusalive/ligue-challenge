@@ -4,8 +4,8 @@ import { DbRemoveDeveloper } from './DbRemoveDeveloper'
 
 const makeDeleteDeveloperByIdRepositoryStub = (): DeleteDeveloperByIdRepository => {
   class DeleteDeveloperByIdRepositoryStub implements DeleteDeveloperByIdRepository {
-    async deleteById (): Promise<void> {
-      return await new Promise(resolve => resolve())
+    async deleteById (): Promise<number> {
+      return await new Promise(resolve => resolve(1))
     }
   }
   return new DeleteDeveloperByIdRepositoryStub()
@@ -45,5 +45,16 @@ describe('DbAddDeveloper', () => {
     const promise = sut.remove('any_id')
 
     await expect(promise).rejects.toEqual(new NotFoundError('any_message'))
+  })
+
+  test('Should throw NotFoundError if DeleteDeveloperByIdRepository returns 0', async () => {
+    const { sut, deleteDeveloperByIdRepositoryStub } = makeSut()
+
+    const deleteSpy = jest.spyOn(deleteDeveloperByIdRepositoryStub, 'deleteById')
+    deleteSpy.mockResolvedValueOnce(0)
+
+    const promise = sut.remove('any_id')
+
+    await expect(promise).rejects.toEqual(new NotFoundError('Developer not found'))
   })
 })
