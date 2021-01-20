@@ -1,4 +1,4 @@
-import { notFound, serverError } from '@/Application/helpers/http/http-helper'
+import { notFound, ok, serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetDevelopersWithPagination, GetDevelopersWithPaginationReturn } from '@/Domain/developer/usecases/GetDevelopersWithPagination'
@@ -33,16 +33,16 @@ const makeFakeDevelopersArray = (): DeveloperModel[] => ([
   }
 ])
 
+const makeGetDevelopersWithPaginationResult = (): GetDevelopersWithPaginationReturn => ({
+  developers: makeFakeDevelopersArray(),
+  page: 1,
+  totalOfPages: 1
+})
+
 const makeGetDevelopersWithPaginationStub = (): GetDevelopersWithPagination => {
   class GetDevelopersWithPaginationStub implements GetDevelopersWithPagination {
     async get (): Promise<GetDevelopersWithPaginationReturn> {
-      return await new Promise(resolve => {
-        return resolve({
-          developers: makeFakeDevelopersArray(),
-          page: 1,
-          totalOfPages: 1
-        })
-      })
+      return await new Promise(resolve => resolve(makeGetDevelopersWithPaginationResult()))
     }
   }
   return new GetDevelopersWithPaginationStub()
@@ -104,5 +104,13 @@ describe('GetAllDevelopersController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(notFound(new NotFoundError('No developer found')))
+  })
+
+  test('Should return ok with data on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(ok(makeGetDevelopersWithPaginationResult()))
   })
 })
