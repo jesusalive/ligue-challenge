@@ -1,7 +1,8 @@
-import { serverError } from '@/Application/helpers/http/http-helper'
+import { notFound, serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetOneDeveloper } from '@/Domain/developer/usecases/GetOneDeveloper'
+import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 import { GetOneDeveloperController } from './GetOneDeveloperController'
 
 const makeFakeRequest = (): HttpRequest => ({
@@ -53,5 +54,16 @@ describe('GetOneDeveloperController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return notFound if GetOneDeveloper throws a NotFoundError', async () => {
+    const { sut, getOneDeveloperStub } = makeSut()
+
+    const getSpy = jest.spyOn(getOneDeveloperStub, 'get')
+    getSpy.mockRejectedValueOnce(new NotFoundError('Developer not found'))
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(notFound(new NotFoundError('Developer not found')))
   })
 })
