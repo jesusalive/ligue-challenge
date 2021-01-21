@@ -1,4 +1,4 @@
-import { notFound, serverError } from '@/Application/helpers/http/http-helper'
+import { notFound, ok, serverError } from '@/Application/helpers/http/http-helper'
 import { HttpRequest } from '@/Application/protocols'
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetOneDeveloper } from '@/Domain/developer/usecases/GetOneDeveloper'
@@ -65,5 +65,13 @@ describe('GetOneDeveloperController', () => {
     const httpResponse = await sut.handle(makeFakeRequest())
 
     expect(httpResponse).toEqual(notFound(new NotFoundError('Developer not found')))
+  })
+
+  test('Should return ok with developer data on success', async () => {
+    const { sut } = makeSut()
+
+    const httpResponse = await sut.handle(makeFakeRequest())
+
+    expect(httpResponse).toEqual(ok(makeFakeDeveloper()))
   })
 })
