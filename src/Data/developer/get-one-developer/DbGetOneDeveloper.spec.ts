@@ -56,4 +56,12 @@ describe('DbGetOneDeveloper', () => {
 
     await expect(promise).rejects.toEqual(new NotFoundError('Developer not found'))
   })
+
+  test('Should return a developer on success', async () => {
+    const { sut } = makeSut()
+
+    const developer = await sut.get('any_id')
+
+    expect(developer).toEqual(makeFakeDeveloper())
+  })
 })
