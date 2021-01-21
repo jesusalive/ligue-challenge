@@ -1,5 +1,6 @@
 import { DeveloperModel } from '@/Domain/developer/Developer'
 import { GetDeveloperByIdRepository } from '@/Domain/developer/repositories/GetDeveloperByIdRepository'
+import { NotFoundError } from '@/Domain/shared/errors/NotFoundError'
 import { DbGetOneDeveloper } from './DbGetOneDeveloper'
 
 const makeFakeDeveloper = (): DeveloperModel => ({
@@ -43,5 +44,16 @@ describe('DbGetOneDeveloper', () => {
     await sut.get('any_id')
 
     expect(getByIdSpy).toHaveBeenCalledWith('any_id')
+  })
+
+  test('Should throw a NotFoundError if GetDeveloperByIdRepository returns null', async () => {
+    const { sut, getDeveloperByIdRepositoryStub } = makeSut()
+
+    const getByIdSpy = jest.spyOn(getDeveloperByIdRepositoryStub, 'getById')
+    getByIdSpy.mockResolvedValueOnce(null)
+
+    const promise = sut.get('any_id')
+
+    await expect(promise).rejects.toEqual(new NotFoundError('Developer not found'))
   })
 })
