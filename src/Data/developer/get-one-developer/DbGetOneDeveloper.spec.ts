@@ -46,6 +46,17 @@ describe('DbGetOneDeveloper', () => {
     expect(getByIdSpy).toHaveBeenCalledWith('any_id')
   })
 
+  test('Should throw if GetDeveloperByIdRepository throws', async () => {
+    const { sut, getDeveloperByIdRepositoryStub } = makeSut()
+
+    const getByIdSpy = jest.spyOn(getDeveloperByIdRepositoryStub, 'getById')
+    getByIdSpy.mockRejectedValueOnce(new Error())
+
+    const promise = sut.get('any_id')
+
+    await expect(promise).rejects.toEqual(new Error())
+  })
+
   test('Should throw a NotFoundError if GetDeveloperByIdRepository returns null', async () => {
     const { sut, getDeveloperByIdRepositoryStub } = makeSut()
 
