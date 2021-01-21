@@ -45,6 +45,17 @@ const makeSut = (): SutTypes => {
 }
 
 describe('GetOneDeveloperController', () => {
+  test('Should call GetOneDeveloper with correct values', async () => {
+    const { sut, getOneDeveloperStub } = makeSut()
+
+    const getSpy = jest.spyOn(getOneDeveloperStub, 'get')
+
+    const fakeRequest = makeFakeRequest()
+    await sut.handle(fakeRequest)
+
+    expect(getSpy).toHaveBeenCalledWith(fakeRequest.params.id)
+  })
+
   test('Should return serverError if GetOneDeveloper throws a unexpected error', async () => {
     const { sut, getOneDeveloperStub } = makeSut()
 
