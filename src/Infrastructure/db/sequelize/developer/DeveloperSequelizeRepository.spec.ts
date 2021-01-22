@@ -319,4 +319,19 @@ describe('DeveloperSequelizeRepository', () => {
       })
     })
   })
+
+  describe('getById', () => {
+    test('Should call findOne with correct values', async () => {
+      const sut = makeSut()
+
+      const findOneSpy = jest.spyOn(Developer, 'findOne')
+      await sut.getById(1)
+
+      expect(findOneSpy).toHaveBeenCalledWith({
+        where: {
+          id: 1
+        }
+      })
+    })
+  })
 })
