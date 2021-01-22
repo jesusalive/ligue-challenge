@@ -52,3 +52,12 @@ Update a developer data
 DELETE /developers/{id}
 ```
 Remove a developer
+
+## About the structure
+The application have some layers.
+The 'Domain' layer contains the core. Entities, interfaces of repositories and usecases etc.
+The 'Application' layer contains mainly the controllers and some protocols.
+The 'Data' layer contains mainly the usecase implementations and some protocols.
+The 'Infrastructure' layer contains mainly the repositories implementations and have access to external libs.
+The 'Validation' layer contains the validators used on controllers.
+The 'Main' layer is where the magic happens. Layer responsible for mount all controllers, routes, and init application.
