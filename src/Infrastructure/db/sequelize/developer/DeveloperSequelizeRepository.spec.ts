@@ -333,5 +333,24 @@ describe('DeveloperSequelizeRepository', () => {
         }
       })
     })
+
+    test('Should return a developer on success', async () => {
+      const createdDeveloper = await Developer.create({
+        age: 10,
+        birthdate: new Date(),
+        hobby: 'any_hobby',
+        name: 'any_name',
+        sex: 'H'
+      })
+      const sut = makeSut()
+
+      const developer = await sut.getById(createdDeveloper.id)
+
+      expect(developer).toEqual(
+        expect.objectContaining({
+          id: createdDeveloper.id
+        })
+      )
+    })
   })
 })
