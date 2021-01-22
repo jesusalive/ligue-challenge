@@ -17,6 +17,7 @@ birthday: date
 1. Clone the project
 2. Install the dependencies with ```npm install``` or ```yarn```
 3. Wake up the application with ```docker-compose up -d```
+4. Access all endpoints on localhost:3000 or change the port in .env file (PORT variable)
 
 *To run all tests type ```npm run test:unit``` or ```yarn test:unit``` (the docker service "test_database" must be active)
 
