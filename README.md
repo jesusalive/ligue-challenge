@@ -30,7 +30,7 @@ Return all developers
 ```
 GET /developers/{page}
 ```
-Return developers with according to the querystring params (example: ?name=any_name) and pagination
+Return developers according to the querystring params (example: ?name=any_name) and pagination
 
 ```
 GET /developer/{id}
