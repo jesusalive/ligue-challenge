@@ -3,6 +3,7 @@ import { CreateDeveloperRepository } from '@/Domain/developer/repositories/Creat
 import { DeleteDeveloperByIdRepository } from '@/Domain/developer/repositories/DeleteDeveloperByIdRepository'
 import { GetAllDevelopersRepository } from '@/Domain/developer/repositories/GetAllDevelopersRepository'
 import { GetAndCountAllDevelopersRepository, GetAndCountAllDevelopersReturn } from '@/Domain/developer/repositories/GetAndCountAllDevelopersRepository'
+import { GetDeveloperByIdRepository } from '@/Domain/developer/repositories/GetDeveloperByIdRepository'
 import { UpdateDeveloperRepository } from '@/Domain/developer/repositories/UpdateDeveloperRepository'
 import { UpdateDeveloperData } from '@/Domain/developer/usecases/UpdateDeveloper'
 import Developer from './Developer.sequelize'
@@ -12,6 +13,7 @@ export class DeveloperSequelizeRepository implements
   UpdateDeveloperRepository,
   DeleteDeveloperByIdRepository,
   GetAllDevelopersRepository,
+  GetDeveloperByIdRepository,
   GetAndCountAllDevelopersRepository {
   async create (data: Omit<DeveloperModel, 'id'>): Promise<DeveloperModel> {
     const developer = await Developer.create(data)
@@ -41,6 +43,16 @@ export class DeveloperSequelizeRepository implements
     })
 
     return quantityOfRemovedRecords
+  }
+
+  async getById (id: number): Promise<DeveloperModel> {
+    const developer = await Developer.findOne({
+      where: {
+        id
+      }
+    })
+
+    return developer
   }
 
   async getAll (): Promise<DeveloperModel[]> {
