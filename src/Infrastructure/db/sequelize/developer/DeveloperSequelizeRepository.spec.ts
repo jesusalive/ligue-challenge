@@ -352,5 +352,13 @@ describe('DeveloperSequelizeRepository', () => {
         })
       )
     })
+
+    test('Should return null if not found', async () => {
+      const sut = makeSut()
+
+      const developer = await sut.getById(1)
+
+      expect(developer).toBeNull()
+    })
   })
 })
